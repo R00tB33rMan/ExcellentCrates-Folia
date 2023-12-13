@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import su.nexmedia.engine.utils.random.Rnd;
 import su.nexmedia.engine.utils.values.UniSound;
 import su.nightexpress.excellentcrates.ExcellentCratesAPI;
@@ -13,19 +14,26 @@ import su.nightexpress.excellentcrates.opening.task.OpeningTask;
 public class AnimationTask extends OpeningTask {
 
     private final AnimationInfo parent;
+	    private WrappedTask task;
 
     public AnimationTask(@NotNull PlayerOpeningData data, @NotNull AnimationInfo parent) {
         super(data);
         this.parent = parent;
     }
 
+
+    @Override
+    public boolean isCancelled() {
+    	return task.isCancelled();
+    }
+
     @Override
     protected boolean onStart() {
         if (this.parent.getStartDelay() > 0 && this.parent.getTickInterval() <= 0) {
-            this.runTaskLater(ExcellentCratesAPI.PLUGIN, this.parent.getStartDelay());
+        	    task = ExcellentCratesAPI.PLUGIN.getFoliaLib().getImpl().runLater(this, this.parent.getStartDelay());
         }
         else {
-            this.runTaskTimer(ExcellentCratesAPI.PLUGIN, this.parent.getStartDelay(), this.parent.getTickInterval());
+        	    task = ExcellentCratesAPI.PLUGIN.getFoliaLib().getImpl().runTimer(this, this.parent.getStartDelay()+1, this.parent.getTickInterval());
         }
         return true;
     }
@@ -43,7 +51,7 @@ public class AnimationTask extends OpeningTask {
     @Override
     public void run() {
         if (this.data.isCompleted()) {
-            this.cancel();
+            task.cancel();
         }
 
         Inventory inventory = this.data.getInventory();

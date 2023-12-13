@@ -21,11 +21,11 @@ public class EditorMainMenu extends EditorMenu<ExcellentCratesPlugin, ExcellentC
 
         this.addItem(ItemUtil.createCustomHead(TEXTURE_CRATE), EditorLocales.CRATES_EDITOR, 11)
             .setClick((viewer, event) -> {
-                this.plugin.runTask(task -> this.getCratesEditor().open(viewer.getPlayer(), 1));
+                this.plugin.getFoliaLib().getImpl().runAtEntity(viewer.getPlayer(), () -> this.getCratesEditor().open(viewer.getPlayer(), 1));
             });
         this.addItem(Material.BLAZE_ROD, EditorLocales.KEYS_EDITOR, 15)
             .setClick((viewer, event) -> {
-                this.plugin.runTask(task -> this.getKeysEditor().open(viewer.getPlayer(), 1));
+                this.plugin.getFoliaLib().getImpl().runAtEntity(viewer.getPlayer(), () -> this.getKeysEditor().open(viewer.getPlayer(), 1));
             });
     }
 

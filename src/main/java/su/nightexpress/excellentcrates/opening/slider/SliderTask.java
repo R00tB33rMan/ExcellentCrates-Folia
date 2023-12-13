@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import su.nexmedia.engine.utils.PDCUtil;
 import su.nexmedia.engine.utils.random.Rnd;
 import su.nexmedia.engine.utils.values.UniSound;
@@ -23,6 +24,8 @@ public class SliderTask extends OpeningTask {
     private int  rolls;
     private long rollSpeed;
 
+	    private WrappedTask task;
+
     public SliderTask(@NotNull PlayerOpeningData data, @NotNull SliderInfo parent) {
         super(data);
         this.parent = parent;
@@ -34,7 +37,7 @@ public class SliderTask extends OpeningTask {
         this.rolls = 0;
         this.rollSpeed = this.getParent().getRollTickInterval();
 
-        this.runTaskTimer(ExcellentCratesAPI.PLUGIN, this.getParent().getStartDelay(), 1L);
+        task = ExcellentCratesAPI.PLUGIN.getFoliaLib().getImpl().runTimer(this, this.getParent().getStartDelay()+1, 1L);
         return true;
     }
 
@@ -65,7 +68,7 @@ public class SliderTask extends OpeningTask {
     public void run() {
         if (this.rolls == 0) {
             if (!Rnd.chance(this.getParent().getStartChance())) {
-                this.cancel();
+                task.cancel();
                 this.maybeClose();
                 return;
             }
@@ -116,7 +119,7 @@ public class SliderTask extends OpeningTask {
         }
 
         if (++this.rolls >= this.getParent().getRollTimes()) {
-            this.cancel();
+            task.cancel();
             this.checkRewards();
             this.maybeClose();
             return;
@@ -128,10 +131,15 @@ public class SliderTask extends OpeningTask {
         }
     }
 
+    @Override
+    public boolean isCancelled() {
+    	return task.isCancelled();
+    }
+
     private void maybeClose() {
         if (!this.getData().isCompleted()) return;
 
-        ExcellentCratesAPI.PLUGIN.runTaskLater(task -> {
+        ExcellentCratesAPI.PLUGIN.getFoliaLib().getImpl().runAtEntityLater(this.getData().getPlayer() ,() -> {
             Inventory opened = this.getData().getPlayer().getOpenInventory().getTopInventory();
             if (this.getData().getInventory().equals(opened)) {
                 this.getData().getPlayer().closeInventory();

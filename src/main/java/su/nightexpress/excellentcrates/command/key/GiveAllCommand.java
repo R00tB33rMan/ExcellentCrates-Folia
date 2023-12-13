@@ -67,9 +67,9 @@ class GiveAllCommand extends AbstractCommand<ExcellentCratesPlugin> {
                     .send(target);
             }
         });
-        this.plugin.runTaskAsync(task -> {
-            users.forEach(user -> plugin.getData().saveUser(user));
-        });
+        this.plugin.getFoliaLib().getImpl().runAsync(() -> 
+            users.forEach(user -> plugin.getData().saveUser(user))
+        );
 
         this.plugin.getMessage(Lang.COMMAND_KEY_GIVE_ALL_DONE)
             .replace(Placeholders.GENERIC_AMOUNT, amount)

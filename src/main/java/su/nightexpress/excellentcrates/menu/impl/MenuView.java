@@ -34,7 +34,7 @@ public class MenuView extends ConfigMenu<ExcellentCratesPlugin> {
         this.crateLore = Colorizer.apply(cfg.getStringList("Crate.Lore"));
 
         this.registerHandler(MenuItemType.class)
-            .addClick(MenuItemType.CLOSE, (viewer, event) -> this.plugin.runTask(task -> viewer.getPlayer().closeInventory()));
+            .addClick(MenuItemType.CLOSE, (viewer, event) -> this.plugin.getFoliaLib().getImpl().runAtEntity(viewer.getPlayer(), () -> viewer.getPlayer().closeInventory()));
 
         this.load();
 
@@ -61,7 +61,7 @@ public class MenuView extends ConfigMenu<ExcellentCratesPlugin> {
                 InteractType clickAction = Config.getCrateClickAction(clickType);
                 if (clickAction == null) return;
 
-                this.plugin.runTask(task -> {
+                this.plugin.getFoliaLib().getImpl().runAtEntity(viewer.getPlayer(), () -> {
                     viewer.getPlayer().closeInventory();
                     plugin.getCrateManager().interactCrate(viewer.getPlayer(), crate, clickAction, null, null);
                 });

@@ -100,7 +100,7 @@ public class CrateManager extends AbstractManager<ExcellentCratesPlugin> {
         }
         this.plugin.info("Loaded " + this.getCratesMap().size() + " crates.");
 
-        this.plugin.runTaskLater(task -> {
+        this.plugin.getFoliaLib().getImpl().runLater(() -> {
             this.getCrates().forEach(Crate::loadLocations);
         }, 60L);
 
@@ -349,7 +349,7 @@ public class CrateManager extends AbstractManager<ExcellentCratesPlugin> {
                     }
                 }
 
-                this.plugin.runTaskAsync(task -> {
+                this.plugin.getFoliaLib().getImpl().runAsync(() -> 
                     crate.saveLastOpenData();
                     this.plugin.getData().saveUser(user);
                     user.setIgnoreSync(false);
@@ -462,13 +462,13 @@ public class CrateManager extends AbstractManager<ExcellentCratesPlugin> {
             if (!settings.isSkipAnimation() && Config.CRATE_DISPLAY_REWARD_ABOVE_BLOCK.get() && block != null) {
                 if (block.getState() instanceof Lidded lidded) {
                     lidded.open();
-                    plugin.runTaskLater(task -> lidded.close(), 60L);
+                    plugin.getFoliaLib().getImpl().runLater(() -> lidded.close(), 60L);
                 }
                 HologramHandler hologramHandler = plugin.getHologramHandler();
                 if (hologramHandler != null) {
                     Location location = LocationUtil.getCenter(block.getLocation().add(0, 2, 0), false);
                     hologramHandler.createReward(player, reward, location);
-                    plugin.runTaskLater(task -> hologramHandler.removeReward(player), 60L);
+                    plugin.getFoliaLib().getImpl().runLater(() -> hologramHandler.removeReward(player), 60L);
                 }
             }
         }

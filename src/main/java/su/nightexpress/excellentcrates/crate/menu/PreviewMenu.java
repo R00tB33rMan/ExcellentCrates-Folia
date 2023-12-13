@@ -67,7 +67,7 @@ public class PreviewMenu extends ConfigMenu<ExcellentCratesPlugin> implements Au
 
         this.registerHandler(Type.class)
             .addClick(Type.OPEN, (viewer, event) -> {
-                this.plugin.runTask(task -> {
+                this.plugin.getFoliaLib().getImpl().runAtEntity(viewer.getPlayer(), () ->
                     CrateSource source = this.getLink().get(viewer);
                     Player player = viewer.getPlayer();
 
@@ -76,7 +76,7 @@ public class PreviewMenu extends ConfigMenu<ExcellentCratesPlugin> implements Au
                 });
             })
             .addClick(Type.MILESTONES, (viewer, event) -> {
-                this.plugin.runTask(task -> {
+                this.plugin.getFoliaLib().getImpl().runAtEntity(viewer.getPlayer(), () ->
                     Crate crate = this.getLink().get(viewer).getCrate();
                     this.plugin.getCrateManager().getMilestonesMenu().open(viewer.getPlayer(), crate);
                 });

@@ -60,7 +60,7 @@
             <groupId>dev.folia</groupId>
             <artifactId>folia-api</artifactId>
             <version>1.20.2-R0.1-SNAPSHOT</version>
-  			<scope>provided</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>su.nexmedia</groupId>
